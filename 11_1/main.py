@@ -1,8 +1,8 @@
 
-import missiles_collection
 from tank import Tank
 from tkinter import*
 
+import missiles_collection
 import world
 import tanks_collection
 import texture
@@ -16,10 +16,11 @@ KEY_D = 68
 
 FPS = 60
 
+
 def update():
     tanks_collection.update()
-    player = tanks_collection.get_player()
     missiles_collection.update()
+    player = tanks_collection.get_player()
     world.set_camera_xy(player.get_x()-world.SCREEN_WIDTH//2 + player.get_size()//2,
                         player.get_y()-world.SCREEN_HEIGHT//2 + player.get_size()//2)
 
@@ -27,10 +28,11 @@ def update():
 
     w.after(1000//FPS, update)
 
+
 def key_press(event):
     player = tanks_collection.get_player()
     if event.keycode == KEY_W:
-        player.forvard()
+        player.forward()
     elif event.keycode == KEY_S:
         player.backward()
     elif event.keycode == KEY_A:
@@ -45,8 +47,6 @@ def key_press(event):
         world.move_camera(-5, 0)
     elif event.keycode == KEY_RIGHT:
         world.move_camera(5, 0)
-
-
     elif event.keycode == 32:
         player.fire()
 
@@ -65,30 +65,13 @@ def load_textures():
     texture.load(world.BRICK,'../img/brick.png')
     texture.load(world.WATER, '../img/water.png')
     texture.load(world.CONCRETE, '../img/wall.png')
-    texture.load(world.MISSLE, '../img/bonus.png')
+    texture.load(world.MISSILE, '../img/bonus.png')
 
     texture.load('missile_up', '../img/missile_up.png')
     texture.load('missile_down', '../img/missile_down.png')
     texture.load('missile_left', '../img/missile_left.png')
     texture.load('missile_right', '../img/missile_right.png')
 
-
-# def looad_textures():
-#     texture.load('tankT34_backward', '../img/tankT34_up.png')
-#     texture.load('tankT34_forward', '../img/tankT34_down.png')
-#     texture.load('tankT34_left', '../img/tankT34_left.png')
-#     texture.load('tankT34_right', '../img/tankT34_right.png')
-#
-#     texture.load(world.BRICK, '../img/brick.png')
-#     texture.load(world.WATER, '../img/water.png')
-#     texture.load(world.CONCRETE, '../img/wall.png')
-#
-#     texture.load(world.MISSLE, '../img/bonus.png')
-#
-#     texture.load('tank_right_player', '../img/tank_right_player.png')
-#     texture.load('tank_left_player', '../img/tank_left_player.png')
-#     texture.load('tank_backward_player', '../img/tank_backward_player.png')
-#     texture.load('tank_forward_player', '../img/tank_forward_player.png')
 
 w = Tk()
 load_textures()
@@ -98,6 +81,7 @@ canv.pack()
 world.initialize(canv)
 tanks_collection.initialize(canv)
 missiles_collection.initialize(canv)
+
 w.bind('<KeyPress>', key_press)
 update()
 w.mainloop()

@@ -4,17 +4,12 @@ import  texture
 from tkinter import NW
 from  random import randint, choice
 
-
-
 GROUND = 'g'
 WATER = 'w'
 CONCRETE = 'c'
 BRICK = 'b'
-#1
 
-MISSLE = 'm'
-
-
+MISSILE = 'm'
 
 BLOCK_SIZE = 64
 
@@ -30,7 +25,6 @@ _canvas = None
 _map = []
 
 AIR = 'a'
-# Область функций
 
 
 def load_map(file_name):
@@ -48,14 +42,10 @@ def load_map(file_name):
             i+=1
 
 
-
-
-
-
-
-
 def get_width():
     return get_cols() * BLOCK_SIZE
+
+
 def get_height():
     return get_rows() * BLOCK_SIZE
 
@@ -71,8 +61,6 @@ def set_camera_xy(x, y):
     if y > get_height() - SCREEN_HEIGHT:
         y = get_height() - SCREEN_HEIGHT
 
-
-
     update_all = False
     if abs(_camera_x - x) >= BLOCK_SIZE or abs (_camera_y-y) >= BLOCK_SIZE:
         update_all = True
@@ -80,18 +68,21 @@ def set_camera_xy(x, y):
     _camera_x = x
     _camera_y = y
 
-
     if update_all:
         update_map(all=True)
+
 
 def move_camera(delta_x, delta_y):
     set_camera_xy(_camera_x + delta_x, _camera_y + delta_y)
 
+
 def get_screen_x(world_X):  # перевод в экранные координаты
     return world_X - _camera_x
 
+
 def get_screen_y(world_Y):
     return world_Y - _camera_y
+
 
 def initialize(canv):
     global _canvas
@@ -104,6 +95,7 @@ def initialize(canv):
     # load_map('../map/2.tmap')
     load_map('../map/3.tmap')
     # load_map('../map/brick.tmap')
+
 
 def create_map(rows = 20, cols = 20):
     global _map
@@ -137,8 +129,11 @@ def update_map(all=False):
     for i in range(first_row, last_row+1):
         for j in range(first_col, last_col+1):
             update_cell(i, j)
+
+
 def get_row(y):
     return int(y)//BLOCK_SIZE
+
 
 def get_col(x):
     return int(x)//BLOCK_SIZE
@@ -147,17 +142,21 @@ def get_col(x):
 def get_rows():
     return len(_map)
 
+
 def get_cols():
     return len(_map[0])
+
 
 def get_block(row, col):
     if _inside_of_map(row, col):
         return _map[row][col].get_block()
     return AIR
 
+
 def update_cell(row, col):
     if _inside_of_map(row, col):
         _map[row][col].update()
+
 
 def destroy(row, col):
     if row < 1 or col < 1 or row >= get_rows()-1 or col >= get_cols()-1:
@@ -171,13 +170,10 @@ def _inside_of_map(row, col) :
     return True
 
 
-#3
 def take(row, col):
     if _inside_of_map(row, col):
         return _map[row][col].take()
     return AIR
-
-
 
 
 class _Cell:
@@ -193,12 +189,9 @@ class _Cell:
         self.__create_element(block)
 
 
-
-
-#2
     def take(self):
         block = self.get_block()
-        if block == MISSLE:
+        if block == MISSILE:
             self.set_block(GROUND)
             return block
         else:
@@ -208,7 +201,6 @@ class _Cell:
     def set_block(self, block):
         if self.__block == block:
             return
-
         elif block == GROUND:
             self.__delete_element()
         elif self.__block == GROUND:
@@ -224,7 +216,6 @@ class _Cell:
             self.__id = self.__canvas.create_image(self.__screen_x, self.__screen_y,
                                                    image=texture.get(block),
                                                    anchor=NW)
-
 
 
     def __delete_element(self):
@@ -247,6 +238,7 @@ class _Cell:
 
     def get_block(self):
         return self.__block
+
 
     def update(self):
         if self.__block == GROUND:

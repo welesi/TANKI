@@ -1,6 +1,5 @@
 import world
 
-
 class Hitbox:
     def __init__(self, x, y, width, height, padding = 2):
         self.padding = padding
@@ -10,8 +9,7 @@ class Hitbox:
         self.__set_height(height)
 
         #4
-        self.__black_list = [world.CONCRETE, world.BRICK, world.WATER, world.MISSLE]
-
+        self.__black_list = [world.CONCRETE, world.BRICK, world.WATER, world.MISSILE]
 
 
     def __get_corner_points(self):
@@ -36,27 +34,39 @@ class Hitbox:
 
         return collision
 
+
     def __get_width(self):
         return self.__width
+
+
     def __set_width(self, width):
         if width < 0 :
             width = 0
         self.__width = width
 
+
     def __get_height(self):
         return self.__height
+
+
     def __set_height(self, height):
         if height < 0 :
             height = 0
         self.__height = height
 
+
     def __get_x(self):
         return self.__x
+
+
     def __set_x(self, x):
         self.__x = x
 
+
     def __get_y(self):
         return self.__y
+
+
     def __set_y(self, y):
         self.__y = y
 
@@ -64,6 +74,7 @@ class Hitbox:
     def moveto(self, x, y):
         self.__set_x(x)
         self.__set_y(y)
+
 
     def move(self, dx, dy):
         self.__set_x(dx + self.__get_x())
@@ -73,13 +84,18 @@ class Hitbox:
     def __str__(self):
         return f"({self.__x=}, {self.__y=}, {self.__width=}, {self.__height=})"
 
+
     def __get_top(self):
         return self.y + self.padding
+
+
     def __get_bottom(self):
         return self.y + self.height - self.padding
 
+
     def __get_left(self):
         return self.x + self.padding
+
     def __get_right(self):
         return self.x + self.width - self.padding
 
@@ -94,6 +110,11 @@ class Hitbox:
         if self.bottom < other.top:
             return False
         return True
+
+
+    def set_blacklist(self, black_list):
+        self.__black_list = black_list
+        self._hitbox.set_blacklist([world.CONCRETE, world.BRICK])
 
 
     x = property(__get_x, __set_x)
