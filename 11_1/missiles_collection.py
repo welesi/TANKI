@@ -21,3 +21,12 @@ def update():
             del _missiles[i]
         else:
             _missiles[i].update()
+
+def check_missiles_collision(tank):
+    for missile in _missiles:
+        if missile.get_owner() == tank:
+            continue
+        if missile.intersects(tank):
+            missile.destroy()
+            tank.damage(25)
+            return

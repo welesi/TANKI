@@ -1,11 +1,9 @@
-
-from tank import Tank
-from tkinter import*
+from tkinter import *
 
 import missiles_collection
-import world
 import tanks_collection
 import texture
+import world
 
 KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN = 37, 39, 38, 40
 
@@ -31,6 +29,10 @@ def update():
 
 def key_press(event):
     player = tanks_collection.get_player()
+
+    if player.is_destroyed():
+        return
+
     if event.keycode == KEY_W:
         player.forward()
     elif event.keycode == KEY_S:

@@ -185,6 +185,10 @@ class Unit:
     def is_bot(self):
         return self._bot
 
+    def damage(self, value):
+        self._hp -= value
+        if self._hp <= 0:
+            self.destroy()
 
     def is_destroyed(self):
         return self._destroyed

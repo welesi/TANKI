@@ -92,8 +92,8 @@ def initialize(canv):
 
 
     # load_map('../map/1.tmap')
-    # load_map('../map/2.tmap')
-    load_map('../map/3.tmap')
+    load_map('../map/2.tmap')
+    #load_map('../map/3.tmap')
     # load_map('../map/brick.tmap')
 
 
