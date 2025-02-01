@@ -1,6 +1,3 @@
-
-
-
 from hitbox import Hitbox
 from tkinter import NW
 from random import randint
@@ -33,6 +30,7 @@ class Unit:
         self._right_image = default_image
         self._forward_image = default_image
         self._backward_image = default_image
+        self._destroy_image = default_image
 
         self._create()
 
@@ -70,6 +68,10 @@ class Unit:
         self._vx = 1
         self._vy = 0
         self._canvas.itemconfig(self._id, image=skin.get(self._right_image))
+
+
+    def get_destroy_image(self):
+        return self._destroy_image
 
 
     def stop(self):
@@ -185,10 +187,12 @@ class Unit:
     def is_bot(self):
         return self._bot
 
+
     def damage(self, value):
         self._hp -= value
         if self._hp <= 0:
             self.destroy()
+
 
     def is_destroyed(self):
         return self._destroyed
@@ -199,16 +203,19 @@ class Unit:
         self.stop()
         self._speed = 0
 
+        if not self._bot:
+            self._canvas.itemconfig(self._id, image=skin.get(self._destroy_image))
+
 
 class Tank(Unit):
     def __init__(self, canvas, row, col, bot=True):
         super().__init__(canvas,
-                         col*world.BLOCK_SIZE,
-                         row*world.BLOCK_SIZE,
+                         col * world.BLOCK_SIZE,
+                         row * world.BLOCK_SIZE,
                          2,
                          8,
                          bot,
-                         'tank_up' )
+                         'tank_up')
         if bot:
             self._forward_image = 'tank_up'
             self._backward_image = 'tank_down'
@@ -220,13 +227,32 @@ class Tank(Unit):
             self._left_image = 'tank_left_player'
             self._right_image = 'tank_right_player'
 
-
+        self._destroy_image = 'tank_destroy'  # Текстура разрушенного танка
+        self._hp_text = self._canvas.create_text(self._x, self._y - 20, text=f"HP: {self._hp}", fill="red", font=('Arial', 10))
         self.forward()
         self._ammo = 80
         self._usual_speed = self._speed
-        self._water_speed = self._speed//2
+        self._water_speed = self._speed // 2
         self._target = None
+        self._hit_count = 0  # Счетчик попаданий
 
+    def damage(self, value):
+        self._hp -= value
+        self._hit_count += 1
+        self._canvas.itemconfig(self._hp_text, text=f"HP: {self._hp}")  # Обновляем текст здоровья
+        if self._hp <= 0 or self._hit_count >= 4:  # Уничтожаем танк после 4 попаданий или если здоровье <= 0
+            self.destroy()
+
+    def destroy(self):
+        self._destroyed = True
+        self.stop()
+        self._speed = 0
+        self._canvas.itemconfig(self._id, image=skin.get(self._destroy_image))  # Меняем текстуру на разрушенную
+        self._canvas.delete(self._hp_text)  # Удаляем текст здоровья
+
+    def _repaint(self):
+        super()._repaint()
+        self._canvas.coords(self._hp_text, self._x + self.get_size() // 2, self._y - 20)  # Обновляем позицию текста здоровья
 
     def set_target(self, target):
         self._target = target
@@ -251,6 +277,43 @@ class Tank(Unit):
                 self._AI_goto_target()
             else:
                 self._change_orientation()
+        elif randint(1,30) == 1:
+            self._AI_fire()
+        elif randint(1,100) == 1:
+            self.fire()
+
+
+    def _AI_fire(self):
+        if self._target is None:
+            return
+
+        center_x = self.get_x() + self.get_size()//2
+        center_y = self.get_y() + self.get_size() // 2
+
+        target_center_x = self._target.get_x() + self._target.get_size()//2
+        target_center_y = self._target.get_y() + self._target.get_size() // 2
+
+        row = world.get_row(center_y)
+        col = world.get_col(center_x)
+
+        row_target = world.get_row(target_center_y)
+        col_target = world.get_col(target_center_x)
+
+        if row == row_target:
+            if col_target < col:
+                self.left()
+                self.fire()
+            else:
+                self.right()
+                self.fire()
+
+        elif col == col_target:
+            if row_target < row:
+                self.forward()
+                self.fire()
+            else:
+                self.backward()
+                self.fire()
 
 
     def fire(self):
@@ -342,7 +405,6 @@ class Missile(Unit):
 
         if world.CONCRETE in details:
             self.destroy()
-
 
 
 

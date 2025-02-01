@@ -13,9 +13,10 @@ def initialize(canv):
     _canvas = canv
 
     player = spawn(False)
-    enemy = spawn(True).set_target(player)
-    spawn(True).set_target(player)
-    id_screen_text = _canvas.create_text(10, 10,text=_get_screen_text(), font = ('TkDefaltFont', 20), fill = 'white', anchor=NW)
+    for _ in range(5):  # Создаем 5 танков противников
+        enemy = spawn(True)
+        enemy.set_target(player)
+    id_screen_text = _canvas.create_text(10, 10, text=_get_screen_text(), font=('TkDefaultFont', 20), fill='white', anchor=NW)
 
 def _get_screen_text():
     if get_player().is_destroyed():

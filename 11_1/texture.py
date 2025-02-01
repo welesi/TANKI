@@ -1,10 +1,8 @@
-
 from tkinter import PhotoImage
 
 _frames = {}
 
 def load(name, file_name):
-
     image = PhotoImage(file=file_name)
     _frames[name] = image
 

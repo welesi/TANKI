@@ -74,6 +74,7 @@ def load_textures():
     texture.load('missile_left', '../img/missile_left.png')
     texture.load('missile_right', '../img/missile_right.png')
 
+    texture.load('tank_destroy', '../img/tank_destroy.png')
 
 w = Tk()
 load_textures()
