@@ -76,6 +76,9 @@ def load_textures():
 
     texture.load('tank_destroy', '../img/tank_destroy.png')
 
+    texture.load('health_bar', '../img/0.png')  # Красная полоска
+    texture.load('health_bar_bg', '../img/25.png')  # Фон полоски здоровья
+
 w = Tk()
 load_textures()
 w.title('Танки на минималках 2.0')

@@ -228,7 +228,12 @@ class Tank(Unit):
             self._right_image = 'tank_right_player'
 
         self._destroy_image = 'tank_destroy'  # Текстура разрушенного танка
-        self._hp_text = self._canvas.create_text(self._x, self._y - 20, text=f"HP: {self._hp}", fill="red", font=('Arial', 10))
+        # Инициализация текста HP с экранными координатами
+        self._hp_text = self._canvas.create_text(
+            world.get_screen_x(self._x + self.get_size() // 2),  # Центр танка по X
+            world.get_screen_y(self._y - 20),  # Над танком по Y
+            text=f"HP: {self._hp}", fill="red", font=('Arial', 10)
+        )
         self.forward()
         self._ammo = 80
         self._usual_speed = self._speed
@@ -252,7 +257,12 @@ class Tank(Unit):
 
     def _repaint(self):
         super()._repaint()
-        self._canvas.coords(self._hp_text, self._x + self.get_size() // 2, self._y - 20)  # Обновляем позицию текста здоровья
+        # Обновляем позицию текста HP с учетом смещения камеры
+        screen_x = world.get_screen_x(self._x + self.get_size() // 2)  # Центр танка по X
+        screen_y = world.get_screen_y(self._y - 20)  # Над танком по Y
+        self._canvas.coords(self._hp_text, screen_x, screen_y)
+
+
 
     def set_target(self, target):
         self._target = target
