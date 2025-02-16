@@ -1,8 +1,7 @@
-
-
 import  texture
 from tkinter import NW
 from  random import randint, choice
+
 
 GROUND = 'g'
 WATER = 'w'
@@ -25,6 +24,10 @@ _canvas = None
 _map = []
 
 AIR = 'a'
+
+map = '../map/3.tmap'
+#maps = ['../map/1.tmap', '../map/2.tmap', '../map/3.tmap']
+#selected_map = 0
 
 
 def load_map(file_name):
@@ -87,14 +90,8 @@ def get_screen_y(world_Y):
 def initialize(canv):
     global _canvas
     _canvas = canv
-
-    # create_map(25,25)
-
-
-    # load_map('../map/1.tmap')
-    load_map('../map/2.tmap')
-    #load_map('../map/3.tmap')
-    # load_map('../map/brick.tmap')
+    load_map(map)
+#    load_map(maps[selected_map])  # Загружаем выбранную карту
 
 
 def create_map(rows = 20, cols = 20):

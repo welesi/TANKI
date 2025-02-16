@@ -1,12 +1,14 @@
+import os
 from hitbox import Hitbox
-from tkinter import NW
+from tkinter import NW, PhotoImage
 from random import randint
 
 import missiles_collection
 import world
 import  texture as skin
 
-
+img_dir = os.path.abspath(os.path.dirname(__file__))  # Текущая директория файла
+img_dir = os.path.join(img_dir, "img")  # Путь к папке с изображениями
 class Unit:
     def __init__(self, canvas, x,y, speed, padding,
                  bot, default_image):
@@ -32,11 +34,43 @@ class Unit:
         self._backward_image = default_image
         self._destroy_image = default_image
 
+        img_dir = os.path.abspath(os.path.dirname(__file__))  # Текущая директория файла
+        img_dir = os.path.join(img_dir, "img")  # Путь к папке с изображениями
+
+        # Загрузка изображений HP с указанием пути
+        self.hp_100 = PhotoImage(file=os.path.join(img_dir, "100.png"))
+        self.hp_75 = PhotoImage(file=os.path.join(img_dir, "75.png"))
+        self.hp_50 = PhotoImage(file=os.path.join(img_dir, "50.png"))
+        self.hp_25 = PhotoImage(file=os.path.join(img_dir, "25.png"))
+        self.hp_0 = PhotoImage(file=os.path.join(img_dir, "0.png"))
+
+        self._hp_id = None
+
         self._create()
 
 
     def _create(self):
         self._id = self._canvas.create_image(self._x, self._y, image=skin.get(self._default_image), anchor=NW)
+        self._hp_id = self._canvas.create_image(self._x, self._y - 20, image=self.hp_100, anchor=NW)
+
+    def _update_hp_display(self):
+        """Обновляет изображение HP в зависимости от текущего здоровья."""
+        if self._hp_id is not None:
+            if self._hp > 75:
+                hp_image = self.hp_100
+            elif self._hp > 50:
+                hp_image = self.hp_75
+            elif self._hp > 25:
+                hp_image = self.hp_50
+            elif self._hp > 0:
+                hp_image = self.hp_25
+            else:
+                hp_image = self.hp_0
+
+            screen_x = world.get_screen_x(self._x)
+            screen_y = world.get_screen_y(self._y - 20)
+            self._canvas.moveto(self._hp_id, x=screen_x, y=screen_y)
+            self._canvas.itemconfig(self._hp_id, image=hp_image)
 
 
     def __del__(self):
@@ -89,6 +123,7 @@ class Unit:
         self._update_hitbox()
         self._check_map_collision()
         self._repaint()
+        self._update_hp_display()
 
 
     def _AI(self):
@@ -192,6 +227,7 @@ class Unit:
         self._hp -= value
         if self._hp <= 0:
             self.destroy()
+        self._update_hp_display()
 
 
     def is_destroyed(self):
@@ -210,12 +246,12 @@ class Unit:
 class Tank(Unit):
     def __init__(self, canvas, row, col, bot=True):
         super().__init__(canvas,
-                         col * world.BLOCK_SIZE,
-                         row * world.BLOCK_SIZE,
+                         col*world.BLOCK_SIZE,
+                         row*world.BLOCK_SIZE,
                          2,
                          8,
                          bot,
-                         'tank_up')
+                         'tank_up' )
         if bot:
             self._forward_image = 'tank_up'
             self._backward_image = 'tank_down'
@@ -227,41 +263,15 @@ class Tank(Unit):
             self._left_image = 'tank_left_player'
             self._right_image = 'tank_right_player'
 
-        self._destroy_image = 'tank_destroy'  # Текстура разрушенного танка
-        # Инициализация текста HP с экранными координатами
-        self._hp_text = self._canvas.create_text(
-            world.get_screen_x(self._x + self.get_size() // 2),  # Центр танка по X
-            world.get_screen_y(self._y - 20),  # Над танком по Y
-            text=f"HP: {self._hp}", fill="red", font=('Arial', 10)
-        )
+            self._destroy_image = 'tank_destroy'
+
+
+
         self.forward()
         self._ammo = 80
         self._usual_speed = self._speed
-        self._water_speed = self._speed // 2
+        self._water_speed = self._speed//2
         self._target = None
-        self._hit_count = 0  # Счетчик попаданий
-
-    def damage(self, value):
-        self._hp -= value
-        self._hit_count += 1
-        self._canvas.itemconfig(self._hp_text, text=f"HP: {self._hp}")  # Обновляем текст здоровья
-        if self._hp <= 0 or self._hit_count >= 4:  # Уничтожаем танк после 4 попаданий или если здоровье <= 0
-            self.destroy()
-
-    def destroy(self):
-        self._destroyed = True
-        self.stop()
-        self._speed = 0
-        self._canvas.itemconfig(self._id, image=skin.get(self._destroy_image))  # Меняем текстуру на разрушенную
-        self._canvas.delete(self._hp_text)  # Удаляем текст здоровья
-
-    def _repaint(self):
-        super()._repaint()
-        # Обновляем позицию текста HP с учетом смещения камеры
-        screen_x = world.get_screen_x(self._x + self.get_size() // 2)  # Центр танка по X
-        screen_y = world.get_screen_y(self._y - 20)  # Над танком по Y
-        self._canvas.coords(self._hp_text, screen_x, screen_y)
-
 
 
     def set_target(self, target):
@@ -402,6 +412,11 @@ class Missile(Unit):
         self._y += owner.get_vy() * self.get_size() // 2
 
 
+    def _create(self):
+        # Переопределяем метод, чтобы не создавать _hp_id для снарядов
+        self._id = self._canvas.create_image(self._x, self._y, image=skin.get(self._default_image), anchor=NW)
+
+
     def get_owner(self):
         return self._owner
 
@@ -415,7 +430,6 @@ class Missile(Unit):
 
         if world.CONCRETE in details:
             self.destroy()
-
 
 
 

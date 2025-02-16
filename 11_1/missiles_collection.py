@@ -3,7 +3,6 @@ from units import Missile
 _missiles = []
 _canvas = None
 
-
 def initialize(canvas):
     global _canvas
     _canvas = canvas
@@ -22,11 +21,19 @@ def update():
         else:
             _missiles[i].update()
 
+
 def check_missiles_collision(tank):
     for missile in _missiles:
         if missile.get_owner() == tank:
             continue
         if missile.intersects(tank):
             missile.destroy()
-            tank.damage(25)  # Наносим урон танку
+
+            tank.damage(25)
+
             return
+
+
+def reset():
+    global _missiles
+    _missiles = []  # Очищаем список снарядов
