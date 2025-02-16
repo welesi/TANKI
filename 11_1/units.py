@@ -10,7 +10,7 @@ import  texture as skin
 img_dir = os.path.abspath(os.path.dirname(__file__))  # Текущая директория файла
 img_dir = os.path.join(img_dir, "img")  # Путь к папке с изображениями
 class Unit:
-    def __init__(self, canvas, x,y, speed, padding,
+    def __init__(self, canvas, x,y, speed, padding, parent_rect,
                  bot, default_image):
         self._speed = speed
         self._x = x
@@ -34,20 +34,22 @@ class Unit:
         self._backward_image = default_image
         self._destroy_image = default_image
 
-        img_dir = os.path.abspath(os.path.dirname(__file__))  # Текущая директория файла
-        img_dir = os.path.join(img_dir, "img")  # Путь к папке с изображениями
+        # img_dir = os.path.abspath(os.path.dirname(__file__))  # Текущая директория файла
+        # img_dir = os.path.join(img_dir, "img")  # Путь к папке с изображениями
 
         # Загрузка изображений HP с указанием пути
-        self.hp_100 = PhotoImage(file=os.path.join(img_dir, "100.png"))
-        self.hp_75 = PhotoImage(file=os.path.join(img_dir, "75.png"))
-        self.hp_50 = PhotoImage(file=os.path.join(img_dir, "50.png"))
-        self.hp_25 = PhotoImage(file=os.path.join(img_dir, "25.png"))
-        self.hp_0 = PhotoImage(file=os.path.join(img_dir, "0.png"))
+        # self.hp_100 = PhotoImage(file=os.path.join(img_dir, "100.png"))
+        # self.hp_75 = PhotoImage(file=os.path.join(img_dir, "75.png"))
+        # self.hp_50 = PhotoImage(file=os.path.join(img_dir, "50.png"))
+        # self.hp_25 = PhotoImage(file=os.path.join(img_dir, "25.png"))
+        # self.hp_0 = PhotoImage(file=os.path.join(img_dir, "0.png"))
 
         self._hp_id = None
-
-        self._create()
-
+        #
+        # self._create()
+        # self.current_texture = self.textures[100]
+        # self.rect = self.current_texture.get_rect()
+        # self.update_position(parent_rect)
 
     def _create(self):
         self._id = self._canvas.create_image(self._x, self._y, image=skin.get(self._default_image), anchor=NW)
