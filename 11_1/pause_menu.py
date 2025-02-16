@@ -48,7 +48,7 @@ def show_menu(root):
     tanks_collection.set_game_paused(True)  # Сообщает, что игра на паузе
     tanks_collection.set_menu_active(True)
 
-    menu_canvas = Canvas(root, width=300, height=200, bg="gray")
+    menu_canvas = Canvas(root, width=300, height=400, bg="gray")
     menu_canvas.place(x=world.SCREEN_WIDTH//2 - 150, y=world.SCREEN_HEIGHT//2 - 100)
 
     update_menu()

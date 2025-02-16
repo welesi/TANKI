@@ -61,6 +61,7 @@ def load_textures():
     texture.load('tank_up', '../img/tank_up.png')
     texture.load('tank_left', '../img/tank_left.png')
     texture.load('tank_right', '../img/tank_right.png')
+
     texture.load('tank_down_player', '../img/tank_down_player.png')
     texture.load('tank_up_player', '../img/tank_up_player.png')
     texture.load('tank_left_player', '../img/tank_left_player.png')

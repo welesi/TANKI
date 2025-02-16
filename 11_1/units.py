@@ -10,7 +10,7 @@ import  texture as skin
 img_dir = os.path.abspath(os.path.dirname(__file__))  # Текущая директория файла
 img_dir = os.path.join(img_dir, "img")  # Путь к папке с изображениями
 class Unit:
-    def __init__(self, canvas, x,y, speed, padding, parent_rect,
+    def __init__(self, canvas, x,y, speed, padding,
                  bot, default_image):
         self._speed = speed
         self._x = x
@@ -46,14 +46,14 @@ class Unit:
 
         self._hp_id = None
         #
-        # self._create()
+        self._create()
         # self.current_texture = self.textures[100]
         # self.rect = self.current_texture.get_rect()
         # self.update_position(parent_rect)
 
     def _create(self):
         self._id = self._canvas.create_image(self._x, self._y, image=skin.get(self._default_image), anchor=NW)
-        self._hp_id = self._canvas.create_image(self._x, self._y - 20, image=self.hp_100, anchor=NW)
+        # self._hp_id = self._canvas.create_image(self._x, self._y - 20, image=self.hp_100, anchor=NW)
 
     def _update_hp_display(self):
         """Обновляет изображение HP в зависимости от текущего здоровья."""
@@ -252,8 +252,7 @@ class Tank(Unit):
                          row*world.BLOCK_SIZE,
                          2,
                          8,
-                         bot,
-                         'tank_up' )
+                         bot,'tank_up')
         if bot:
             self._forward_image = 'tank_up'
             self._backward_image = 'tank_down'
