@@ -23,7 +23,11 @@ def initialize(canv):
 
     player = spawn(False)
     enemy = spawn(True).set_target(player)
-    spawn(True).set_target(player)
+
+
+    for _ in range(3):
+        enemy = spawn(True)
+        enemy.set_target(player)
 
     id_screen_text = _canvas.create_text(10, 10, text=_get_screen_text(), font=('TkDefaultFont', 20), fill='white',
                                          anchor=NW)
