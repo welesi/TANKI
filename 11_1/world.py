@@ -25,9 +25,9 @@ _map = []
 
 AIR = 'a'
 
-map = '../map/3.tmap'
-#maps = ['../map/1.tmap', '../map/2.tmap', '../map/3.tmap']
-#selected_map = 0
+map = '../map/2.tmap'
+# maps = ['../map/1.tmap', '../map/2.tmap', '../map/3.tmap']
+# selected_map = 1
 
 
 def load_map(file_name):
